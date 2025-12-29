@@ -20,3 +20,5 @@ extern PubSubClient mqttClient;
 void setupMQTT();
 
 void connectMQTT();
+
+void mqttCallback(char* topic, byte* payload, unsigned int length);

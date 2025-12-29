@@ -40,8 +40,29 @@ void connectMQTT() {
             Serial.print("failed, rc=");
             Serial.print(mqttClient.state());
             Serial.println(" retrying...");
-            
+
             delay(2000);
         }
+        mqttClient.subscribe(MQTT_TOPIC);
+        Serial.println("Subscribed to MQTT topic: " MQTT_TOPIC);
     }
+}
+
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+    Serial.print("Message arrived on topic: ");
+    Serial.println(topic);
+
+    Serial.print("Payload length: ");
+    Serial.println(length);
+
+    // // Example: copy binary payload
+    // if (length == 64) {
+    //     memcpy(ciphertext_block, payload, 64);
+    // }
+
+    // Debug: print hex
+    for (unsigned int i = 0; i < length; i++) {
+        Serial.printf("%02X ", payload[i]);
+    }
+    Serial.println();
 }

@@ -18,14 +18,12 @@ void setup() {
     setupMQTT();
     connectMQTT();
 
+    mqttClient.setCallback(mqttCallback);
+
     monitorMemory();
 }
 
 void loop() {
-    if (!mqttClient.connected()) {
-        connectMQTT();
-    }
-
     mqttClient.loop(); // Maintain MQTT connection
 
     static bool sent = false;
