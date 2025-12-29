@@ -11,6 +11,14 @@ void print_hex(const char *label, uint8_t *buf, size_t len) {
     Serial.println();
 }
 
+void print_ASCII(const char *label, uint8_t *buf, size_t len) {
+    Serial.print(label);
+    for (size_t i = 0; i < len; i++) {
+        Serial.printf("%c", buf[i]);
+    }
+    Serial.println();
+}
+
 void monitorMemory() {
     Serial.printf("Free Heap: %d bytes\n", ESP.getFreeHeap());
     Serial.printf("Min Free Heap: %d bytes\n", ESP.getMinFreeHeap()); // Lowest point reached

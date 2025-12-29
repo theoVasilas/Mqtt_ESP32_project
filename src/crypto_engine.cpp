@@ -1,5 +1,4 @@
 #include "crypto_engine.h"
-#include "crypto_config.h"
 #include "secrets.h"
 
 #include <ChaChaPoly.h>
