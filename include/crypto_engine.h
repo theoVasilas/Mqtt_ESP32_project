@@ -1,7 +1,7 @@
 #ifndef CRYPTO_ENGINE_H
 #define CRYPTO_ENGINE_H
 
-#define CHACHA_BLOCK_SIZE   256 //(20 * 256)= 10 KB
+#define CHACHA_BLOCK_SIZE   256 //(200 * 256)= 10 KB
 #define CHACHA_NONCE_SIZE   12
 #define CHACHA_KEY_SIZE     32
 #define CHACHA_TAG_SIZE     16

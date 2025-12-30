@@ -25,6 +25,7 @@ void Cha_encryption(
     ChaChaPoly chacha;
 
     chacha.clear();
+    generate_nonce(nonce);
     chacha.setKey(CHACHA_KEY, CHACHA_KEY_SIZE); //is set  in header
     chacha.setIV(nonce, CHACHA_NONCE_SIZE);
     
@@ -44,8 +45,7 @@ void Cha_decryption(
 ){
     ChaChaPoly chacha;
     
-    generate_nonce(nonce);
-    print_hex("Nonce: ", nonce, CHACHA_NONCE_SIZE);
+    //print_hex("Nonce: ", nonce, CHACHA_NONCE_SIZE);
     
     chacha.clear();
     chacha.setKey(CHACHA_KEY, CHACHA_KEY_SIZE); //is set  in header

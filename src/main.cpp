@@ -29,13 +29,11 @@ void setup() {
 
         int counter = 1; //debaging purpose
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 200; i++) {
 
             sprintf((char*)plaintext_block, "HELLO ESP32 CHACHA %d", counter);
             print_ASCII("Plaintext: ", plaintext_block, CHACHA_BLOCK_SIZE);
             counter++;
-            
-            
 
             Cha_encryption(plaintext_block, msg.ciphertext, auth_tag, nonce);
             print_hex("Auth Tag: ", auth_tag, CHACHA_TAG_SIZE);
