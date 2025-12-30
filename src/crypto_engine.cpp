@@ -1,5 +1,9 @@
 #include "crypto_engine.h"
+#include "helper_fun.h"
 #include "secrets.h"
+
+#include "esp_log.h"
+static const char* TAG = "CRYPTO";
 
 #include <ChaChaPoly.h>
 #include <Arduino.h>
@@ -40,17 +44,19 @@ void Cha_decryption(
 ){
     ChaChaPoly chacha;
     
+    generate_nonce(nonce);
+    print_hex("Nonce: ", nonce, CHACHA_NONCE_SIZE);
+    
     chacha.clear();
     chacha.setKey(CHACHA_KEY, CHACHA_KEY_SIZE); //is set  in header
     chacha.setIV(nonce, CHACHA_NONCE_SIZE);
 
     // Add AAD (Optional)
     //chacha.addAuthData(aad, aad_len);
-
-    if (!chacha.checkTag(tag, CHACHA_TAG_SIZE)) {
-        Serial.println("Authentication failed!");
-    }
-
+    
     chacha.decrypt(decrypted, ciphertext, CHACHA_BLOCK_SIZE);
 
+    if (!chacha.checkTag(tag, CHACHA_TAG_SIZE)) {
+        ESP_LOGE(TAG, "Authentication failed!");
+    }
 }

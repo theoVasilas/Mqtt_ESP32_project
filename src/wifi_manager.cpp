@@ -43,7 +43,7 @@ void connectMQTT() {
 
             delay(2000);
         }
-        mqttClient.subscribe(MQTT_TOPIC);
+        //mqttClient.subscribe(MQTT_TOPIC);
         Serial.println("Subscribed to MQTT topic: " MQTT_TOPIC);
     }
 }

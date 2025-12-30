@@ -15,7 +15,6 @@ struct Message {
     uint8_t ciphertext[CHACHA_BLOCK_SIZE];
 };
 
-
 void generate_nonce(uint8_t nonce[CHACHA_NONCE_SIZE]);
 
 void Cha_encryption(

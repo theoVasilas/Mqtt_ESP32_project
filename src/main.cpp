@@ -11,48 +11,60 @@ static uint8_t nonce[CHACHA_NONCE_SIZE];
 Message msg;
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
     
     connectWiFi();
     setupMQTT();
     connectMQTT();
 
-    mqttClient.setCallback(mqttCallback);
-    
-    memset(plaintext_block, 0x00, CHACHA_BLOCK_SIZE);
+    #ifdef DEVICE_ROLE_SUBSCRIBER
+        mqttClient.setCallback(mqttCallback);
+        mqttClient.subscribe(MQTT_TOPIC);
+        ESP_LOGI("MAIN", "Started as SUBSCRIBER");
+    #endif
 
-    int counter = 1; //debaging purpose
+    #ifdef DEVICE_ROLE_PUBLISHER
+        ESP_LOGI("MAIN", "Started as PUBLISHER");
+        memset(plaintext_block, 0xFF, CHACHA_BLOCK_SIZE);
 
-    for (int i = 0; i < 1; i++) {
+        int counter = 1; //debaging purpose
 
-        sprintf((char*)plaintext_block, "HELLO ESP32 CHACHA %d", counter);
-        print_ASCII("Plaintext: ", plaintext_block, CHACHA_BLOCK_SIZE);
-        counter++;
-        
-        generate_nonce(nonce);
-        print_hex("Nonce: ", nonce, CHACHA_NONCE_SIZE);
+        for (int i = 0; i < 1; i++) {
 
-        Cha_encryption(plaintext_block, msg.ciphertext, auth_tag, nonce);
-        print_hex("Auth Tag: ", auth_tag, CHACHA_TAG_SIZE);
-        //print_hex("Ciphertext: ", ciphertext_block, CHACHA_BLOCK_SIZE);
+            sprintf((char*)plaintext_block, "HELLO ESP32 CHACHA %d", counter);
+            print_ASCII("Plaintext: ", plaintext_block, CHACHA_BLOCK_SIZE);
+            counter++;
+            
+            
 
-        //compose the rest of the message
-        memcpy(msg.nonce, nonce, CHACHA_NONCE_SIZE);
-        memcpy(msg.tag, auth_tag, CHACHA_TAG_SIZE);
+            Cha_encryption(plaintext_block, msg.ciphertext, auth_tag, nonce);
+            print_hex("Auth Tag: ", auth_tag, CHACHA_TAG_SIZE);
+            //print_hex("Ciphertext: ", ciphertext_block, CHACHA_BLOCK_SIZE);
 
-        if (!mqttClient.publish(MQTT_TOPIC, (uint8_t*)&msg, sizeof(Message), false)) {
-            Serial.println("MQTT publish failed");
-        } else {
-            Serial.println("Published encrypted message to MQTT");
+            //compose the rest of the message
+            memcpy(msg.nonce, nonce, CHACHA_NONCE_SIZE);
+            memcpy(msg.tag, auth_tag, CHACHA_TAG_SIZE);
+
+            if (!mqttClient.publish(MQTT_TOPIC, (uint8_t*)&msg, sizeof(Message), false)) {
+                Serial.println("MQTT publish failed");
+            } else {
+                Serial.println("Published encrypted message to MQTT");
+            }
         }
-    }
+        
+    #endif
+    
     
     //monitorMemory();
 }
 
 
 void loop() {
-    mqttClient.loop(); // Maintain MQTT connection
+
+    #ifdef DEVICE_ROLE_SUBSCRIBER
+        mqttClient.loop(); // Maintain MQTT connection
+    #endif
+    
 }
 
 
